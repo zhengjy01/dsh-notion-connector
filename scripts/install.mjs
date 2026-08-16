@@ -3,9 +3,9 @@
  *
  * Usage: node scripts/install.mjs
  *
- * Copies the built plugin into ~/.dsh/profiles/node_modules/dsh-notion — the
+ * Copies the built plugin into ~/.dsh/profiles/node_modules/dsh-notion-connector — the
  * hoisted store the web profile resolves out-of-tree plugins from. For normal
- * installs use `dsh plugin --profile web add github:zhengjy01/dsh-notion`.
+ * installs use `dsh plugin --profile web add github:zhengjy01/dsh-notion-connector`.
  *
  * A GUI restart is still required afterwards: the host scans the plugin set
  * at boot ("plugin-set changes take effect on restart").
@@ -33,5 +33,5 @@ cpSync(join(pkgRoot, 'cordis.patch.yml'), join(profileStore, 'cordis.patch.yml')
 const installed = readFileSync(join(profileStore, 'lib/index.js'), 'utf8')
 const built = readFileSync(sourceLib, 'utf8')
 if (installed !== built) throw new Error('install mismatch: lib/index.js differs after copy')
-console.log(`✔ installed dsh-notion -> ${profileStore}`)
+console.log(`✔ installed dsh-notion-connector -> ${profileStore}`)
 console.log('重启 dsh web 后生效（host 只在启动时扫描插件集）。')

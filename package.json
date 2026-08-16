@@ -1,5 +1,5 @@
 {
-  "name": "dsh-notion",
+  "name": "dsh-notion-connector",
   "version": "0.1.0",
   "description": "Notion connector for DeepSeek Harness: Integration Token config (~/.dsh/notion.json, 0600), agent tools (notion_search / notion_read_page / notion_query_database / notion_create_page / notion_update_page / notion_append_blocks), and a Web GUI settings page. · DSH 的 Notion 连接插件：搜索/读取/查询/创建/更新/追加，设置页一键配置 Token。",
   "type": "module",
@@ -70,6 +70,6 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhengjy01/dsh-notion.git"
+    "url": "https://github.com/zhengjy01/dsh-notion-connector.git"
   }
 }

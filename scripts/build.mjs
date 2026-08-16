@@ -60,7 +60,7 @@ const result = await build({
 
 const bundle = result.outputFiles[0].text
 const wrapper = `window.__ModuleLoader__.load({
-\tid: "dsh-notion",
+\tid: "dsh-notion-connector",
 \tfactory: (require) => {
 \t\tvar module = { exports: {} };
 \t\tvar exports = module.exports;

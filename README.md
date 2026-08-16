@@ -1,4 +1,4 @@
-# dsh-notion
+# dsh-notion-connector
 
 DeepSeek Harness 的 Notion 连接插件。配置一次 Integration Token 后，agent 与 Web GUI 设置页都可以操作你的 Notion 工作区。
 
@@ -12,12 +12,12 @@ DeepSeek Harness 的 Notion 连接插件。配置一次 Integration Token 后，
   - `notion_update_page` — 更新属性 / 归档
   - `notion_append_blocks` — 追加内容块
 - **Web 设置页**：设置 → Notion — 连接状态、Token 粘贴（保存时自动校验并读取工作区名）、清除配置、三步指引
-- **存储**：Token 存 `~/.dsh/notion.json`（权限 0600）；通过 loopback-only 的 `/api/dsh-notion/*` 与浏览器半交互；API 调用走 Node 原生 fetch，无 shell 依赖
+- **存储**：Token 存 `~/.dsh/notion.json`（权限 0600）；通过 loopback-only 的 `/api/dsh-notion-connector/*` 与浏览器半交互；API 调用走 Node 原生 fetch，无 shell 依赖
 
 ## 安装
 
 ```bash
-dsh plugin --profile web add github:zhengjy01/dsh-notion
+dsh plugin --profile web add github:zhengjy01/dsh-notion-connector
 ```
 
 重启 dsh web 后生效。
@@ -35,7 +35,7 @@ dsh plugin --profile web add github:zhengjy01/dsh-notion
 pnpm install        # esbuild / typescript / 类型依赖
 pnpm build          # esbuild: lib/index.js (host) + lib/client.js (browser)
 pnpm typecheck      # tsc --noEmit
-pnpm install:local  # 本地开发快速安装（复制到 ~/.dsh/profiles/node_modules/dsh-notion）
+pnpm install:local  # 本地开发快速安装（复制到 ~/.dsh/profiles/node_modules/dsh-notion-connector）
 ```
 
 ## 限制
