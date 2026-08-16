@@ -1,0 +1,5 @@
+# dsh-notion standalone workspace: no packages, just the build-script
+# approval so `pnpm install` exits clean (esbuild's postinstall is a
+# self-check; the platform binary ships via optionalDependencies).
+allowBuilds:
+  esbuild: true
