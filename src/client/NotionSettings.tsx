@@ -8,7 +8,7 @@ import type { CSSProperties } from 'react'
 /** Route prefix of the host settings API (see src/routes.ts). */
 const API = '/api/dsh-notion'
 
-/** Connection status returned by GET /api/dsh-notion/status. */
+/** Connection status returned by POST /api/dsh-notion/status. */
 interface Status {
   configured: boolean
   workspaceName: string
@@ -31,12 +31,12 @@ const styles: Record<string, CSSProperties> = {
   hintP: { margin: '4px 0' },
 }
 
-/** Fetch one JSON route with a JSON body (GET when body is undefined). */
+/** Fetch one JSON route. Always POST so browsers send Origin (required by authenticated reverse proxies on /api/*). */
 async function api<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(API + path, {
-    method: body === undefined ? 'GET' : 'POST',
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body === undefined ? {} : body),
   })
   if (!response.ok) throw new Error(`HTTP ${response.status}`)
   return (await response.json()) as T

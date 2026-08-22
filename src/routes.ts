@@ -81,7 +81,7 @@ export function makeRoutes(): WebRoute[] {
       kind: 'exact',
       path: `${NOTION_API_PREFIX}/status`,
       handler: async (req, res) => {
-        if (req.method !== 'GET' || !isLoopbackRequest(req)) {
+        if ((req.method !== 'GET' && req.method !== 'POST') || !isLoopbackRequest(req)) {
           writeJson(res, 403, { error: 'forbidden: loopback-only' })
           return
         }
