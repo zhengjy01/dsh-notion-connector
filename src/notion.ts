@@ -300,11 +300,20 @@ export async function readPage(
   return { ok: true, page: result }
 }
 
+/**
+ * Accept both a parsed json arg and its JSON-string encoding. Depending on
+ * the calling layer, `{ type: 'json' }` tool params can arrive as strings;
+ * Notion's API rejects arrays/objects serialized as strings.
+ */
+export function asJsonArg(v: unknown): unknown {
+  return typeof v === 'string' ? JSON.parse(v) : v
+}
+
 /** Query a database with an optional native filter/sorts, paginated. */
 export async function queryDatabase(args: any, signal?: AbortSignal): Promise<any> {
   const body: any = { page_size: Math.min(Math.max(args.pageSize ?? 20, 1), 100) }
-  if (args.filter !== undefined) body.filter = args.filter
-  if (args.sorts !== undefined) body.sorts = args.sorts
+  if (args.filter !== undefined) body.filter = asJsonArg(args.filter)
+  if (args.sorts !== undefined) body.sorts = asJsonArg(args.sorts)
   if (args.startCursor !== undefined) body.start_cursor = args.startCursor
   const res = await notionCall(
     'POST',

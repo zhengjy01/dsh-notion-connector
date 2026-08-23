@@ -8,6 +8,7 @@
 import { defineTool } from '@deepseek-ai/dsh-tools'
 import type { ContentBlock } from '@deepseek-ai/dsh-llm'
 import {
+  asJsonArg,
   friendlyNotionError,
   notionCall,
   normalizeId,
@@ -114,8 +115,8 @@ export function notionCreatePageTool() {
       const parent = args.parentType === 'database'
         ? { database_id: normalizeId(args.parentId) }
         : { page_id: normalizeId(args.parentId) }
-      const body: any = { parent, properties: args.properties ?? {} }
-      if (args.children !== undefined) body.children = args.children
+      const body: any = { parent, properties: asJsonArg(args.properties) ?? {} }
+      if (args.children !== undefined) body.children = asJsonArg(args.children)
       const res = await notionCall('POST', '/v1/pages', body)
       return { ok: true, id: res.id, url: res.url }
     },
@@ -137,7 +138,7 @@ export function notionUpdatePageTool() {
     timeoutMs: 60_000,
     async execute(args) {
       const body: any = {}
-      if (args.properties !== undefined) body.properties = args.properties
+      if (args.properties !== undefined) body.properties = asJsonArg(args.properties)
       if (typeof args.archived === 'boolean') body.archived = args.archived
       if (Object.keys(body).length === 0) throw new Error('请至少提供 properties 或 archived')
       const res = await notionCall('PATCH', `/v1/pages/${normalizeId(args.pageId)}`, body)
@@ -160,7 +161,7 @@ export function notionAppendBlocksTool() {
     output: { schema: { type: 'json' }, render: renderJson },
     timeoutMs: 60_000,
     async execute(args) {
-      const body: any = { children: args.children }
+      const body: any = { children: asJsonArg(args.children) }
       if (args.after !== undefined) body.after = normalizeId(args.after)
       const res = await notionCall('PATCH', `/v1/blocks/${normalizeId(args.blockId)}/children`, body)
       return { ok: true, inserted: (res.results ?? []).map((b: any) => b.id) }
