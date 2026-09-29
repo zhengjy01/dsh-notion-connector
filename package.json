@@ -1,6 +1,6 @@
 {
   "name": "dsh-notion-connector",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Notion connector for DeepSeek Harness: Integration Token config (~/.dsh/notion.json, 0600), agent tools (notion_search / notion_read_page / notion_query_database / notion_create_page / notion_update_page / notion_append_blocks), and a Web GUI settings page. · DSH 的 Notion 连接插件：搜索/读取/查询/创建/更新/追加，设置页一键配置 Token。",
   "type": "module",
   "packageManager": "pnpm@11.7.0",
@@ -30,11 +30,11 @@
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-system-prompt": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6 || ^0.2.0-rc.2",
+    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6 || ^0.2.0-rc.2",
+    "@deepseek-ai/dsh-llm": "^0.1.0-rc.6 || ^0.2.0-rc.2",
+    "@deepseek-ai/dsh-system-prompt": "^0.1.0-rc.6 || ^0.2.0-rc.2",
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6 || ^0.2.0-rc.2",
     "react": "^18.2.0"
   },
   "devDependencies": {
@@ -59,7 +59,8 @@
     "src",
     "cordis.patch.yml",
     "README.md",
-    "README.zh.md"
+    "README.zh.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "dsh",
