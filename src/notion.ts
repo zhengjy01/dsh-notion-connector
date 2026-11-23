@@ -147,6 +147,41 @@ export function normalizeId(raw: string): string {
   return s
 }
 
+/** How many times a string-encoded JSON argument may be decoded in a row. */
+const JSON_DECODE_DEPTH = 3
+
+/**
+ * Coerce a `type: 'json'` tool argument into a real JSON value.
+ *
+ * Parameters declared with the author-only `type: 'json'` schema compile to an
+ * annotation-only JSON Schema node (no `type` keyword), so a host may hand over
+ * the payload as the JSON *string* the model wrote instead of a parsed value.
+ * Notion rejects those strings outright — `body.filter should be an object` —
+ * which is why every structured database query used to fail. Decoding until the
+ * value stops being a string keeps both shapes working, and a string that is
+ * not valid JSON fails with an actionable message instead of a Notion 400.
+ *
+ * @param value - argument as delivered by the host.
+ * @param label - parameter name, used in the error message.
+ * @returns The decoded value, or `undefined` for an empty string.
+ */
+export function parseMaybeJson(value: unknown, label: string): unknown {
+  let current = value
+  for (let depth = 0; depth < JSON_DECODE_DEPTH && typeof current === 'string'; depth++) {
+    const text = current.trim()
+    if (text === '') return undefined
+    try {
+      current = JSON.parse(text)
+    } catch {
+      throw new NotionError(
+        `${label} 需要是合法 JSON：收到无法解析的字符串 ${JSON.stringify(text.slice(0, 120))}。`
+        + '请直接传 JSON 对象/数组，或传其 JSON 字符串形式。',
+      )
+    }
+  }
+  return current
+}
+
 /** Join a rich_text array into plain text. */
 export function plainText(rich: unknown): string {
   if (!Array.isArray(rich)) return ''
@@ -303,8 +338,12 @@ export async function readPage(
 /** Query a database with an optional native filter/sorts, paginated. */
 export async function queryDatabase(args: any, signal?: AbortSignal): Promise<any> {
   const body: any = { page_size: Math.min(Math.max(args.pageSize ?? 20, 1), 100) }
-  if (args.filter !== undefined) body.filter = args.filter
-  if (args.sorts !== undefined) body.sorts = args.sorts
+  // filter/sorts arrive as JSON objects or as JSON strings depending on the
+  // host; decode before forwarding so the request body is always well formed.
+  const filter = parseMaybeJson(args.filter, 'filter')
+  if (filter !== undefined) body.filter = filter
+  const sorts = parseMaybeJson(args.sorts, 'sorts')
+  if (sorts !== undefined) body.sorts = sorts
   if (args.startCursor !== undefined) body.start_cursor = args.startCursor
   const res = await notionCall(
     'POST',
